@@ -1,0 +1,18 @@
+OrdererOrgs:
+- Name: Orderer
+  Domain: mrtgexchg.com
+  Specs:
+  - Hostname: orderer
+PeerOrgs:
+- Name: Registry
+  Domain: Registry.com
+  Template:
+    Count: 1
+  Users:
+    Count: 1
+- Name: Appraiser
+  Domain: Appraiser.com
+  Template:
+    Count: 1
+  Users:
+    Count: 1

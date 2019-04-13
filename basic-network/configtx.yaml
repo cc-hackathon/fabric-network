@@ -1,0 +1,71 @@
+Organizations:
+- &OrdererOrg
+  Name: OrdererOrg
+  ID: OrdererMSP
+  MSPDir: crypto-config/ordererOrganizations/mrtgexchg.com/msp
+
+- &Registry
+  Name: RegistryMSP
+  ID: RegistryMSP
+  MSPDir: crypto-config/peerOrganizations/Registry.com/msp
+  AnchorPeers:
+  - Host: peer0.Registry.com
+    Port: 7051
+
+- &Appraiser
+  Name: AppraiserMSP
+  ID: AppraiserMSP
+  MSPDir: crypto-config/peerOrganizations/Appraiser.com/msp
+  AnchorPeers:
+  - Host: peer0.Appraiser.com
+    Port: 7051
+
+Application: &ApplicationDefaults
+  Organizations:
+
+Capabilities:
+  Global: &ChannelCapabilities
+    V1_1: true
+
+  Orderer: &OrdererCapabilities
+    V1_1: true
+
+  Application: &ApplicationCapabilities
+    V1_2: true
+
+Orderer: &OrdererDefaults
+  OrdererType: solo
+  Addresses:
+  - orderer.mrtgexchg.com:7050
+  BatchTimeout: 2s
+  BatchSize:
+    MaxMessageCount: 10
+    AbsoluteMaxBytes: 99 MB
+    PreferredMaxBytes: 512 KB
+  Organizations:
+
+Profiles:
+
+  MRTGEXCHGOrdererGenesis:
+    Capabilities:
+      <<: *ChannelCapabilities
+    Orderer:
+      <<: *OrdererDefaults
+      Organizations:
+      - *OrdererOrg
+      Capabilities:
+        <<: *OrdererCapabilities
+    Consortiums:
+      MRTGEXCHG:
+        Organizations:
+        - *Registry
+        - *Appraiser
+  RecordsChannel:
+    Consortium: MRTGEXCHG
+    Application:
+      <<: *ApplicationDefaults
+      Organizations:
+      - *Registry
+      - *Appraiser
+      Capabilities:
+        <<: *ApplicationCapabilities
